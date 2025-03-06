@@ -1,0 +1,6 @@
+Вемямя: 10:01
+Тип: Bank.InsufficientFundsError
+Описание: Bank.InsufficientFundsError: Количество привышает баланс
+Вемямя: 10:22
+Тип: System.ArgumentException
+Описание: System.ArgumentException: Value does not fall within the expected range.
