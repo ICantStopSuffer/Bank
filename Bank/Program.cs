@@ -1,28 +1,18 @@
-﻿namespace Bank {
-                                            
-    public class Logger {
-        public static bool Logging = false;
-        private static string fileName = "transaction_errors.log";
+﻿using Bank.Modules;
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
-        public static void clear() {
-            File.WriteAllText(fileName, string.Empty);
+namespace Bank
+{
+
+    public class ApplicationContext : DbContext {
+        public DbSet<BankAccount> accounts { get; set; } = null!;
+
+        public ApplicationContext() {
+            Database.EnsureCreated();
         }
-
-        public static void log(String msg) {
-            if (!Logging) {
-                return;
-            }
-            File.AppendAllText(fileName, msg + "\n");
-        }
-
-        public static Exception logException(Exception exception) {
-            if (!Logging) {
-                return exception;
-            }
-            log(@$"Вемямя: {TimeOnly.FromDateTime(DateTime.Now)}
-Тип: {exception.GetType().ToString()}
-Описание: {exception.ToString()}");
-            return exception;
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=12345");
         }
     }
 
@@ -39,69 +29,11 @@
         public AccountNotFoundError(string msg) : base(msg) { }
     }
 
-    public class BankAccount {
-        public static Dictionary<int, BankAccount> accounts = new Dictionary<int, BankAccount>();
-        private static int nextId;
-        public int id { private set; get; }
-        public double balance { private set; get; }
-
-        public BankAccount() {
-            id = nextId++;
-            accounts.Add(id, this);
-        }
-
-        public void withdraw(double amount) {
-            if (amount > balance) {
-                throw Logger.logException(new InsufficientFundsError("Количество привышает баланс"));
-            }
-            if (amount < 0) {
-                throw Logger.logException(new InvalidAmountError("Количество должно быть положительным"));
-            }
-
-            balance -= amount;
-        }
-
-        public void deposit(double amount) {
-            if (amount < 0) {
-                throw Logger.logException(new InvalidAmountError("Количество должно быть положительным"));
-            }
-
-            balance += amount;
-        }
-
-        public override string ToString() {
-            return $"{id}: {balance}";
-        }
-    }
-
-    public class TransactionManager {
-        public TransactionManager() { }
-
-        public void transfer(BankAccount account0, BankAccount account1, double amount) {
-            if (account0 == null || account1 == null) {
-                throw Logger.logException(new AccountNotFoundError("Аккаунт не найден"));
-            }
-
-            account0.withdraw(amount);
-            account1.deposit(amount);
-        }
-
-        public void transfer(int accountId0, int accountId1, double amount) {
-            if (!BankAccount.accounts.ContainsKey(accountId0) || !BankAccount.accounts.ContainsKey(accountId1)) {
-                throw Logger.logException(new AccountNotFoundError("Аккаунт не найден"));
-            }
-
-            BankAccount account0 = BankAccount.accounts[accountId0];
-            BankAccount account1 = BankAccount.accounts[accountId1];
-
-            transfer(account0, account1, amount);
-        }
-    }
-
     public class Program {
 
 
         static void Main(string[] args) {
+            ApplicationContext context = new ApplicationContext();
             TransactionManager manager = new TransactionManager();
             BankAccount account0 = new BankAccount();
             BankAccount account1 = new BankAccount();
@@ -110,6 +42,7 @@
             account1.deposit(1000);
 
             string choise = "";
+
             while (choise != "exit") {
                 Console.WriteLine(@"1 - Add balance to account
 2 - Withdraw from account

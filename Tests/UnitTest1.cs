@@ -1,6 +1,8 @@
 using Bank;
+using Bank.Modules;
 
-namespace Tests {
+namespace Tests
+{
     [TestClass]
     public class AccountTest {
         [TestMethod]
