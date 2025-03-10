@@ -8,15 +8,14 @@ namespace Bank.Modules
 {
     public class BankAccount
     {
-        public static Dictionary<int, BankAccount> accounts = new Dictionary<int, BankAccount>();
+        //public static Dictionary<int, BankAccount> accounts = new Dictionary<int, BankAccount>();
         private static int nextId;
         public int id { private set; get; }
         public double balance { private set; get; }
 
         public BankAccount()
         {
-            id = nextId++;
-            accounts.Add(id, this);
+            id = ++nextId;
         }
 
         public void withdraw(double amount)

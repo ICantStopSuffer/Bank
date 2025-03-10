@@ -10,7 +10,7 @@ namespace Bank.Modules
     {
         public TransactionManager() { }
 
-        public void transfer(BankAccount account0, BankAccount account1, double amount)
+        public void transfer(BankAccount? account0, BankAccount? account1, double amount)
         {
             if (account0 == null || account1 == null)
             {
@@ -23,13 +23,17 @@ namespace Bank.Modules
 
         public void transfer(int accountId0, int accountId1, double amount)
         {
-            if (!BankAccount.accounts.ContainsKey(accountId0) || !BankAccount.accounts.ContainsKey(accountId1))
+            BankAccount? account0 = Program.context.accounts.FirstOrDefault(account => account.id == accountId0);
+            BankAccount? account1 = Program.context.accounts.FirstOrDefault(account => account.id == accountId1);
+
+            /*if (!BankAccount.accounts.ContainsKey(accountId0) || !BankAccount.accounts.ContainsKey(accountId1))
             {
                 throw Logger.logException(new AccountNotFoundError("Аккаунт не найден"));
             }
 
             BankAccount account0 = BankAccount.accounts[accountId0];
-            BankAccount account1 = BankAccount.accounts[accountId1];
+            BankAccount account1 = BankAccount.accounts[accountId1];*/
+
 
             transfer(account0, account1, amount);
         }

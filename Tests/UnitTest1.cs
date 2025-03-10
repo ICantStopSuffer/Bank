@@ -49,7 +49,11 @@ namespace Tests
             BankAccount bank2 = new BankAccount();
             bank.deposit(200);
 
-            manager.transfer(0, 1, 100);
+            try {
+                manager.transfer(0, 1, 100);
+            } catch (Exception ex) {
+                Assert.Fail(ex.Message);
+            }
         }
 
         [TestMethod]
@@ -93,6 +97,40 @@ namespace Tests
             Logger.Logging = true;
 
             Logger.logException(new ArgumentException());
+        }
+    }
+
+    [TestClass]
+    public class Database {
+
+        [TestMethod]
+        public void Transfer() {
+            TransactionManager manager = new TransactionManager();
+            BankAccount bank = Program.context.accounts.ToList()[0];
+            BankAccount bank2 = Program.context.accounts.ToList()[1];
+
+            try {
+                manager.transfer(bank, bank2, 1);
+            }
+            catch (Exception ex) {
+                Assert.Fail(ex.Message);
+            }
+        }
+
+        [TestMethod]
+        public void NoMoney() {
+            TransactionManager manager = new TransactionManager();
+            BankAccount bank = Program.context.accounts.ToList()[0];
+            BankAccount bank2 = Program.context.accounts.ToList()[1];
+
+            Assert.ThrowsException<InsufficientFundsError>(() => manager.transfer(bank, bank2, 50000));
+        }
+
+        [TestMethod]
+        public void AccountNotFound() {
+            TransactionManager manager = new TransactionManager();
+
+            Assert.ThrowsException<AccountNotFoundError>(() => manager.transfer(0, 101, 1));
         }
     }
 }
