@@ -3,12 +3,20 @@ namespace Bank.Modules {
         public InsufficientFundsError() { }
         public InsufficientFundsError(string msg) : base(msg) { }
     }
+
     public class InvalidAmountError : Exception {
         public InvalidAmountError() { }
         public InvalidAmountError(string msg) : base(msg) { }
     }
+
     public class AccountNotFoundError : Exception {
         public AccountNotFoundError() { }
         public AccountNotFoundError(string msg) : base(msg) { }
     }
+
+    public class InvalidEmailError : Exception {
+        public InvalidEmailError() { }
+        public InvalidEmailError(string msg) : base(msg) { }
+    }
+
 }
