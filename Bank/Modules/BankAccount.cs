@@ -5,6 +5,12 @@ using System.Reflection;
 using System.Security.Cryptography;
 namespace Bank.Modules
 {
+    public enum valueType {
+        RUB,
+        USD,
+        EUR,
+    }
+
     public class BankAccount
     {
         //public static Dictionary<int, BankAccount> accounts = new Dictionary<int, BankAccount>();
@@ -13,35 +19,67 @@ namespace Bank.Modules
         public string email { private set; get; } = "";
         public string password { private set; get; } = "";
         public double balance { private set; get; }
+        public double balance_usd { private set; get; }
+        public double balance_eur { private set; get; }
 
         public BankAccount()
         {
             id = ++nextId;
         }
 
-        public void withdraw(double amount)
-        {
-            if (amount > balance)
-            {
-                throw Logger.logException(new InsufficientFundsError("Количество привышает баланс"));
-            }
-            if (amount < 0)
-            {
-                throw Logger.logException(new InvalidAmountError("Количество должно быть положительным"));
-            }
-
-            balance -= amount;
-        }
-
-        public void deposit(double amount)
+        public void withdraw(double amount, valueType type = valueType.RUB)
         {
             if (amount < 0)
             {
                 throw Logger.logException(new InvalidAmountError("Количество должно быть положительным"));
             }
 
-            balance += amount;
+            switch (type) {
+                case valueType.RUB:
+                    if (amount > balance) {
+                        throw Logger.logException(new InsufficientFundsError("Количество привышает баланс"));
+                    }
+                    balance -= amount;
+                    break;
+
+                case valueType.USD:
+                    if (amount > balance_usd) {
+                        throw Logger.logException(new InsufficientFundsError("Количество привышает баланс"));
+                    }
+                    balance_usd -= amount;
+                    break;
+
+                case valueType.EUR:
+                    if (amount > balance_eur) {
+                        throw Logger.logException(new InsufficientFundsError("Количество привышает баланс"));
+                    }
+                    balance_eur -= amount;
+                    break;
+            }
         }
+
+        public void deposit(double amount, valueType type = valueType.RUB)
+        {
+            if (amount < 0)
+            {
+                throw Logger.logException(new InvalidAmountError("Количество должно быть положительным"));
+            }
+
+            switch (type) {
+                case valueType.RUB:
+                    balance += amount;
+                    break;
+
+                case valueType.USD:
+                    balance_usd += amount;
+                    break;
+
+                case valueType.EUR:
+                    balance_eur += amount;
+                    break;
+            }
+        }
+
 
         public void setEmail(string email) {
             string domain = email.Split('@')[1];

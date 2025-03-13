@@ -24,12 +24,16 @@ namespace Bank
 
         public static Database context = new Database();
         public static TransactionManager manager = new TransactionManager();
+        public static ValueConvertator convertator = new ValueConvertator();
 
         static void Main(string[] args) {
+
             if (context.accounts.ToList().Count <= 0) {
                 for (int i = 0; i < 10; i++) {
                     BankAccount account = new BankAccount();
                     account.deposit(new Random().NextDouble() * 100);
+                    account.deposit(new Random().NextDouble() * 100, valueType.USD);
+                    account.deposit(new Random().NextDouble() * 100, valueType.EUR);
 
                     string email = "";
                     for (int c = 0; c < 10; c++) {

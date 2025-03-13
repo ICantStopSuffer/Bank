@@ -10,18 +10,18 @@ namespace Bank.Modules
     {
         public TransactionManager() { }
 
-        public void transfer(BankAccount? account0, BankAccount? account1, double amount)
+        public void transfer(BankAccount? account0, BankAccount? account1, double amount, valueType type = valueType.RUB)
         {
             if (account0 == null || account1 == null)
             {
                 throw Logger.logException(new AccountNotFoundError("Аккаунт не найден"));
             }
 
-            account0.withdraw(amount);
-            account1.deposit(amount);
+            account0.withdraw(amount, type);
+            account1.deposit(amount, type);
         }
 
-        public void transfer(int accountId0, int accountId1, double amount)
+        public void transfer(int accountId0, int accountId1, double amount, valueType type = valueType.RUB)
         {
             BankAccount? account0 = Program.context.accounts.FirstOrDefault(account => account.id == accountId0);
             BankAccount? account1 = Program.context.accounts.FirstOrDefault(account => account.id == accountId1);
@@ -35,7 +35,7 @@ namespace Bank.Modules
             BankAccount account1 = BankAccount.accounts[accountId1];*/
 
 
-            transfer(account0, account1, amount);
+            transfer(account0, account1, amount, type);
         }
     }
 }
