@@ -12,9 +12,16 @@ namespace Bank.Modules {
     public class ValueConvertator {
         System.Net.WebClient client = new System.Net.WebClient();
 
+        public double Convert(double value, valueType type) {
 
+            if (value < 0) {
+                throw Logger.logException(new InvalidAmountError("Количество должно быть положительным"));
+            }
 
-        public void Convert(double value, valueType type) {
+            var kotirovki = getKot();
+
+            return value * kotirovki[Enum.GetName(typeof(valueType), type)];
+
         }
 
         public Dictionary<string, double> getKot() {
@@ -24,14 +31,6 @@ namespace Bank.Modules {
             var values = JsonConvert.DeserializeObject<Dictionary<string, double>>(jobject["rates"].ToString());
 
             return values;
-
-            //var responseString = await client.GetAsync("https://www.cbr-xml-daily.ru/money.js");
-            //Console.WriteLine(responseString);
-
-            //using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, "https://www.google.com");
-            // выполняем запрос
-            //await httpClient.SendAsync(request);
-            //Dictionary<valueType,double>
         }
     }
 }

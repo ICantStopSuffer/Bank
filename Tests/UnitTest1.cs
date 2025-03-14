@@ -133,4 +133,37 @@ namespace Tests
             Assert.ThrowsException<AccountNotFoundError>(() => manager.transfer(0, 101, 1));
         }
     }
+
+    [TestClass]
+    public class ConvertValue {
+
+        [TestMethod]
+        public void Convert() {
+            ValueConvertator convertator = new ValueConvertator();
+
+            int value = 100;
+            double usdValue = convertator.getKot()["USD"];
+
+            Assert.IsTrue(convertator.Convert(value, valueType.USD) == value * usdValue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidAmountError))]
+        public void Negative() {
+            ValueConvertator convertator = new ValueConvertator();
+
+            int value = -100;
+
+            convertator.Convert(value, valueType.USD);
+        }
+
+        [TestMethod]
+        public void Zero() {
+            ValueConvertator convertator = new ValueConvertator();
+
+            int value = 0;
+
+            Assert.IsTrue(convertator.Convert(value, valueType.USD) == 0);
+        }
+    }
 }

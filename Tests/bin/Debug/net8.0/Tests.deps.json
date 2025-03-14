@@ -520,6 +520,7 @@
       "System.Reflection.Metadata/1.6.0": {},
       "Bank/1.0.0": {
         "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4"
         },
         "runtime": {
