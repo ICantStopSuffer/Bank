@@ -100,7 +100,14 @@ namespace Bank.Modules
             string result = "";
 
             foreach (var field in this.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)) {
-                result += $"{field.Name}: {field.GetValue(this)} | ";
+                string name = field.Name;
+                int index = name.IndexOf(">");
+
+                if (index != -1) {
+                    name = name.Substring(1, index - 1);
+                }
+
+                result += $"{name}: {field.GetValue(this)} | ";
             }
 
             return result;

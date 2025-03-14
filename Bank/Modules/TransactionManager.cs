@@ -21,6 +21,8 @@ namespace Bank.Modules
             notificator.sendMail(account0.email, "Transaction succsesful", account0.ToString());
             notificator.sendMail(account1.email, "Transaction succsesful", account1.ToString());
 
+            Logger.logTransaction(account0, account1, amount, type);
+
             account0.withdraw(amount, type);
             account1.deposit(amount, type);
         }
