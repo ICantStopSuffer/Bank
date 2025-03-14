@@ -25,6 +25,7 @@ namespace Bank
         public static Database context = new Database();
         public static TransactionManager manager = new TransactionManager();
         public static ValueConvertator convertator = new ValueConvertator();
+        public static Notificator notificator = new Notificator();
 
         static void Main(string[] args) {
 

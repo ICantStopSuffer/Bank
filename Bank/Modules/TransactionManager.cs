@@ -17,6 +17,10 @@ namespace Bank.Modules
                 throw Logger.logException(new AccountNotFoundError("Аккаунт не найден"));
             }
 
+            Notificator notificator = new Notificator();
+            notificator.sendMail(account0.email, "Transaction succsesful", account0.ToString());
+            notificator.sendMail(account1.email, "Transaction succsesful", account1.ToString());
+
             account0.withdraw(amount, type);
             account1.deposit(amount, type);
         }
